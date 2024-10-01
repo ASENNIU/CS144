@@ -15,6 +15,9 @@
     "__bit_reference": "cpp",
     "__hash_table": "cpp",
     "__split_buffer": "cpp",
-    "iterator": "cpp"
+    "iterator": "cpp",
+    "cassert": "cpp",
+    "__string": "cpp",
+    "ios": "cpp"
   }
 }
