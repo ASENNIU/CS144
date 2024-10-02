@@ -1,10 +1,9 @@
+#include "address.hh"
 #include "socket.hh"
 #include "util.hh"
-#include "address.hh"
 
 #include <cstdlib>
 #include <iostream>
-
 
 using namespace std;
 
@@ -22,7 +21,7 @@ void get_URL(const string &host, const string &path) {
     TCPSocket http_client;
     http_client.connect(addr);
     http_client.write("GET " + path + "HTTP/1.1\r\n");
-    http_client.write("HOST: "+ host + "\r\n");
+    http_client.write("HOST: " + host + "\r\n");
     http_client.write("Connecttion: close\r\n");
     http_client.write("\r\n");
 
@@ -30,8 +29,6 @@ void get_URL(const string &host, const string &path) {
         std::cout << http_client.read();
     }
     http_client.close();
-
-
 
     // cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
     // cerr << "Warning: get_URL() has not been implemented yet.\n";

@@ -7,7 +7,7 @@
 // automated checks run by `make check_lab2`.
 
 template <typename... Targs>
-void DUMMY_CODE(Targs &&... /* unused */) {}
+void DUMMY_CODE(Targs &&.../* unused */) {}
 
 using namespace std;
 
@@ -39,16 +39,17 @@ uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
 
     // If offset is already greater than checkpoint, it's the absolute sequence number
     if (offset > checkpoint) {
-      return offset;
+        return offset;
     }
-     // Align offset with checkpoint's higher 32 bits
+    // Align offset with checkpoint's higher 32 bits
     offset |= (checkpoint & 0xFFFFFFFF00000000);
 
-    if (offset > checkpoint) offset -= 1ULL << 32;
+    if (offset > checkpoint)
+        offset -= 1ULL << 32;
 
     // Calculate the next possible sequence number (one wrap higher)
     uint64_t upper_bound = offset + (1ULL << 32);
 
     // Return the closer value to checkpoint
-    return (checkpoint - offset < upper_bound -checkpoint) ? offset : upper_bound;
+    return (checkpoint - offset < upper_bound - checkpoint) ? offset : upper_bound;
 }

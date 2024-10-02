@@ -5,11 +5,11 @@
 #include <deque>
 #include <memory>
 #include <numeric>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <sys/uio.h>
 #include <vector>
-#include <stdexcept>
 
 //! \brief A reference-counted read-only string that can discard bytes from the front
 class Buffer {

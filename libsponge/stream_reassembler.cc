@@ -8,7 +8,7 @@
 // You will need to add private members to the class declaration in `stream_reassembler.hh`
 
 template <typename... Targs>
-void DUMMY_CODE(Targs &&... /* unused */) {}
+void DUMMY_CODE(Targs &&.../* unused */) {}
 
 using namespace std;
 
@@ -55,7 +55,8 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
         return;
     }
     // ignore invalid index
-    if (index >= unass_base + _capacity) return;
+    if (index >= unass_base + _capacity)
+        return;
 
     if (index >= unass_base) {
         int offset = index - unass_base;

@@ -8,16 +8,16 @@
 // You will need to add private members to the class declaration in `byte_stream.hh`
 
 template <typename... Targs>
-void DUMMY_CODE(Targs &&... /* unused */) {}
+void DUMMY_CODE(Targs &&.../* unused */) {}
 
 using namespace std;
 
-ByteStream::ByteStream(const size_t capacity) : 
-    _queue(), _cap_size(capacity), _write_size(0), _read_size(0),
-     _end_input(false), _error(false) {}
+ByteStream::ByteStream(const size_t capacity)
+    : _queue(), _cap_size(capacity), _write_size(0), _read_size(0), _end_input(false), _error(false) {}
 
 size_t ByteStream::write(const string &data) {
-    if (_end_input) return 0;
+    if (_end_input)
+        return 0;
     size_t write_size = min(data.size(), _cap_size - _queue.size());
     _write_size += write_size;
     for (size_t i = 0; i < write_size; ++i) {
@@ -33,7 +33,7 @@ string ByteStream::peek_output(const size_t len) const {
 }
 
 //! \param[in] len bytes will be removed from the output side of the buffer
-void ByteStream::pop_output(const size_t len) { 
+void ByteStream::pop_output(const size_t len) {
     size_t pop_size = min(len, _queue.size());
     _read_size += pop_size;
     for (size_t i = 0; i < pop_size; ++i) {
