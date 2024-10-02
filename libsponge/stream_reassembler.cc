@@ -1,7 +1,5 @@
 #include "stream_reassembler.hh"
 
-#include <cassert>
-
 // Dummy implementation of a stream reassembler.
 
 // For Lab 1, please replace with a real implementation that passes the
@@ -10,18 +8,18 @@
 // You will need to add private members to the class declaration in `stream_reassembler.hh`
 
 template <typename... Targs>
-void DUMMY_CODE(Targs &&.../* unused */) {}
+void DUMMY_CODE(Targs &&... /* unused */) {}
 
 using namespace std;
 
-StreamReassembler::StreamReassembler(const size_t capacity):
-    unass_base(0),
-    unass_size(0),
-    _eof(0),
-    buffer(capacity, '\0'),
-    bitmap(capacity, false),
-    _output(capacity),
-    _capacity(capacity) {}
+StreamReassembler::StreamReassembler(const size_t capacity)
+    : unass_base(0)
+    , unass_size(0)
+    , _eof(0)
+    , buffer(capacity, '\0')
+    , bitmap(capacity, false)
+    , _output(capacity)
+    , _capacity(capacity) {}
 
 //! \details This functions calls just after pushing a substring into the
 //! _output stream. It aims to check if there exists any contiguous substrings
@@ -29,14 +27,15 @@ StreamReassembler::StreamReassembler(const size_t capacity):
 void StreamReassembler::check_contiguous() {
     string tmp = "";
     while (bitmap.front()) {
+        // cout<<"check one more contiguous substring"<<endl;
         tmp += buffer.front();
         buffer.pop_front();
         bitmap.pop_front();
         buffer.push_back('\0');
         bitmap.push_back(false);
     }
-
     if (tmp.length() > 0) {
+        // cout << "push one contiguous substring with length " << tmp.length() << endl;
         _output.write(tmp);
         unass_base += tmp.length();
         unass_size -= tmp.length();
@@ -50,13 +49,11 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
     if (eof) {
         _eof = true;
     }
-
     size_t len = data.length();
     if (len == 0 && _eof && unass_size == 0) {
         _output.end_input();
         return;
     }
-
     // ignore invalid index
     if (index >= unass_base + _capacity) return;
 
@@ -66,26 +63,27 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
         if (real_len < len) {
             _eof = false;
         }
-
-        for (size_t i = 0; i < real_len; ++i) {
-            if (bitmap[i + offset]) continue;
+        for (size_t i = 0; i < real_len; i++) {
+            if (bitmap[i + offset])
+                continue;
             buffer[i + offset] = data[i];
             bitmap[i + offset] = true;
             unass_size++;
         }
     } else if (index + len > unass_base) {
         int offset = unass_base - index;
-        size_t real_len = min(len, _capacity - _output.buffer_size());
+        size_t real_len = min(len - offset, _capacity - _output.buffer_size());
         if (real_len < len - offset) {
             _eof = false;
         }
-        for (size_t i = 0; i < real_len; ++i) {
-            if (bitmap[i]) continue;
-            buffer[i + offset] = data[i];
-            bitmap[i + offset] = true;
-            unass_size++; 
+        for (size_t i = 0; i < real_len; i++) {
+            if (bitmap[i])
+                continue;
+            buffer[i] = data[i + offset];
+            bitmap[i] = true;
+            unass_size++;
         }
-    } 
+    }
     check_contiguous();
     if (_eof && unass_size == 0) {
         _output.end_input();

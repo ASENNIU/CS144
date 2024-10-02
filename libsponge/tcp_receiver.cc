@@ -14,15 +14,17 @@ using namespace std;
 
 void TCPReceiver::segment_received(const TCPSegment &seg) {
     const TCPHeader head = seg.header();
+
     if (!head.syn && !_synReceived) {
         return;
     }
 
+    // extract data from the payload
     string data = seg.payload().copy();
 
     bool eof = false;
 
-    // First SYN received
+    // first SYN received
     if (head.syn && !_synReceived) {
         _synReceived = true;
         _isn = head.seqno;
@@ -35,14 +37,15 @@ void TCPReceiver::segment_received(const TCPSegment &seg) {
 
     // FIN received
     if (_synReceived && head.fin) {
-        _finRecevied = eof = true;
+        _finReceived = eof = true;
     }
 
     // convert the seqno into absolute seqno
-    uint64_t checkpoint _reassembler.ack_index();
+    uint64_t checkpoint = _reassembler.ack_index();
     uint64_t abs_seqno = unwrap(head.seqno, _isn, checkpoint);
-    uint64_t stream_idx = abs_seqno - _synRecieved;
+    uint64_t stream_idx = abs_seqno - _synReceived;
 
+    // push the data into stream reassembler
     _reassembler.push_substring(data, stream_idx, eof);
 }
 

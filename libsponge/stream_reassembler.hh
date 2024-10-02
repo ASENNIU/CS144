@@ -14,18 +14,18 @@
 class StreamReassembler {
   private:
     // Your code here -- add private members as necessary.
-   
-    size_t unass_base;                 //!< The index of first unassembled bytes
-    size_t unass_size;                 //!< The number of bytes in the substrings stored but not yet reassbled
-    bool _eof;                         //!< The last bytes has arrived
-    std::deque<char> buffer;           //!< The unassembled strings
-    std::deque<bool> bitmap;           //!< buffer bitmap
+    size_t unass_base;        //!< The index of the first unassembled byte
+    size_t unass_size;        //!< The number of bytes in the substrings stored but not yet reassembled
+    bool _eof;                //!< The last byte has arrived
+    std::deque<char> buffer;  //!< The unassembled strings
+    std::deque<bool> bitmap;  //!< buffer bitmap
 
     ByteStream _output;  //!< The reassembled in-order byte stream
     size_t _capacity;    //!< The maximum number of bytes
 
     void check_contiguous();
-    size_t real_size(const string& data, const size_t index);
+    size_t real_size(const std::string &data, const size_t index);
+
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity` bytes.
     //! \note This capacity limits both the bytes that have been reassembled,
@@ -60,7 +60,6 @@ class StreamReassembler {
 
     //! The acknowledge index of the stream, i.e., the index of the next interested substring
     size_t ack_index() const;
-    
 };
 
 #endif  // SPONGE_LIBSPONGE_STREAM_REASSEMBLER_HH

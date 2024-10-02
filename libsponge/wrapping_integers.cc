@@ -30,7 +30,12 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) { return isn + static_cast<uin
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     // Calculate the offset from ISN
     // if n < isn, equal: n - isn + (1u << 32)
-    uint64_t offset = static_cast<uint64_t>(n - isn);
+    uint64_t offset;
+    if (n - isn < 0) {
+        offset = static_cast<uint64_t>(n - isn + (1l << 32));
+    } else {
+        offset = static_cast<uint64_t>(n - isn);
+    }
 
     // If offset is already greater than checkpoint, it's the absolute sequence number
     if (offset > checkpoint) {

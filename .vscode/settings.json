@@ -20,8 +20,8 @@
     "__string": "cpp",
     "ios": "cpp",
     "*.hh": "cpp",
-    "*.cc": "cpp"
-
+    "*.cc": "cpp",
+    "cstdint": "cpp"
   },
   "C_Cpp.intelliSenseEngine": "disabled",
   "C_Cpp.default.compilerPath": "/usr/bin/gcc-12",
