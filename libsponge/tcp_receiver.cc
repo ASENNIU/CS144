@@ -15,22 +15,28 @@ using namespace std;
 void TCPReceiver::segment_received(const TCPSegment &seg) {
     const TCPHeader head = seg.header();
 
+    // Ignore segments without SYN if we haven't received a SYN yet
     if (!head.syn && !_synReceived) {
         return;
     }
 
-    // extract data from the payload
+    // Extract data from the payload
     string data = seg.payload().copy();
 
     bool eof = false;
 
-    // first SYN received
+    // Handle the first SYN packet
     if (head.syn && !_synReceived) {
         _synReceived = true;
         _isn = head.seqno;
+
+        // Check if this is also a FIN packet (rare, but possible)
         if (head.fin) {
             _finReceived = eof = true;
         }
+
+        // Push any data in the SYN packet to the reassembler
+        // Index is 0 because this is the start of the stream, support for "TCP Fast Open"（TFO)
         _reassembler.push_substring(data, 0, eof);
         return;
     }

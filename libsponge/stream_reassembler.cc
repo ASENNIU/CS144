@@ -46,21 +46,30 @@ void StreamReassembler::check_contiguous() {
 //! possibly out-of-order, from the logical stream, and assembles any newly
 //! contiguous substrings and writes them into the output stream in order.
 void StreamReassembler::push_substring(const string &data, const size_t index, const bool eof) {
+    // Set EOF flag if this is the last segment
     if (eof) {
         _eof = true;
     }
     size_t len = data.length();
+
+    // Handle empty data with EOF
     if (len == 0 && _eof && unass_size == 0) {
         _output.end_input();
         return;
     }
-    // ignore invalid index
+
+    // Ignore data beyond capacity
     if (index >= unass_base + _capacity)
         return;
 
+    // Process data that starts at or after unass_base
     if (index >= unass_base) {
         int offset = index - unass_base;
+
+        // Calculate how much of the data can actually be stored
         size_t real_len = min(len, _capacity - _output.buffer_size() - offset);
+
+        // Check if all data can be stored
         if (real_len < len) {
             _eof = false;
         }
@@ -71,7 +80,9 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
             bitmap[i + offset] = true;
             unass_size++;
         }
-    } else if (index + len > unass_base) {
+    }
+    // Process data that overlaps with unass_base
+    else if (index + len > unass_base) {
         int offset = unass_base - index;
         size_t real_len = min(len - offset, _capacity - _output.buffer_size());
         if (real_len < len - offset) {
@@ -86,6 +97,8 @@ void StreamReassembler::push_substring(const string &data, const size_t index, c
         }
     }
     check_contiguous();
+
+    // End input only if EOF is set and all data has been reassembled
     if (_eof && unass_size == 0) {
         _output.end_input();
     }
