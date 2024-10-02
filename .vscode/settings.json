@@ -19,5 +19,6 @@
     "cassert": "cpp",
     "__string": "cpp",
     "ios": "cpp"
-  }
+  },
+  "C_Cpp.default.compilerPath": "/usr/bin/gcc-12"
 }
