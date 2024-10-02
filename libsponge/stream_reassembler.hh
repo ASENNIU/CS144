@@ -58,6 +58,8 @@ class StreamReassembler {
     //! \returns `true` if no substrings are waiting to be assembled
     bool empty() const;
 
+    //! The acknowledge index of the stream, i.e., the index of the next interested substring
+    size_t ack_index() const;
     
 };
 
