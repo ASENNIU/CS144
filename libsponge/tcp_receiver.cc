@@ -1,6 +1,8 @@
 #include "tcp_receiver.hh"
 
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
 
 // Dummy implementation of a TCP receiver
 
@@ -14,7 +16,6 @@ using namespace std;
 
 void TCPReceiver::segment_received(const TCPSegment &seg) {
     const TCPHeader head = seg.header();
-
     // Ignore segments without SYN if we haven't received a SYN yet
     if (!head.syn && !_synReceived) {
         return;

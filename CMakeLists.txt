@@ -1,6 +1,13 @@
-cmake_minimum_required (VERSION 2.8.5)
+cmake_minimum_required(VERSION 3.10)
+
 cmake_policy (SET CMP0054 NEW)
 project (Sponge)
+
+set(CMAKE_EXPORT_COMPILECOMMANDS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# set(CMAKE_C_COMPILER clang)
+# set(CMAKE_CXX_COMPILER clang++)
 
 include (etc/build_defs.cmake)
 include (etc/build_type.cmake)
