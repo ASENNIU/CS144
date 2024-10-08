@@ -9,3 +9,5 @@ CTestTestfile.cmake
 compile_commands.json
 *.json
 \[object Object]
+!.vscode/c_cpp_properties.json
+!.vscode/launch.json
