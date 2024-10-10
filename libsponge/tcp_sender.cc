@@ -11,6 +11,18 @@
 // For Lab 3, please replace with a real implementation that passes the
 // automated checks run by `make check_lab3`.
 
+/*
+ * TCPSender Implementation
+ *
+ * This file contains the implementation of the TCPSender class methods.
+ * It handles the core logic of the TCP sender, including:
+ * - Segment creation and transmission
+ * - Window management
+ * - Acknowledgment processing
+ * - Retransmission handling
+ * - Timer management
+ */
+
 template <typename... Targs>
 void DUMMY_CODE(Targs &&.../* unused */) {}
 

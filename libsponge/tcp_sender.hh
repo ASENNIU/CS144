@@ -10,6 +10,28 @@
 #include <functional>
 #include <queue>
 
+/*
+ * TCPSender Class
+ *
+ * This class implements the sender side of a TCP connection. It is responsible for
+ * managing the outgoing data stream, creating and sending TCP segments, handling
+ * acknowledgments, and implementing the TCP congestion control algorithm.
+ *
+ * Key Components:
+ * - Outbound queue of segments (segments_out)
+ * - Retransmission timer
+ * - Outgoing byte stream
+ * - Sequence number tracking
+ * - Sender window management
+ * - Connection state tracking
+ *
+ * Main Operations:
+ * - Filling the window with new segments
+ * - Processing incoming acknowledgments
+ * - Managing retransmissions
+ * - Handling timeouts
+ */
+
 //! \brief The "sender" part of a TCP implementation.
 
 //! Accepts a ByteStream, divides it up into segments and sends the
