@@ -18,36 +18,44 @@
 //! segments if the retransmission timer expires.
 class TCPSender {
   private:
-    //! our initial sequence number, the number for our SYN.
-    WrappingInt32 _isn;
+    //! Initial sequence number.
+    const WrappingInt32 _isn;
 
-    //! outbound queue of segments that the TCPSender wants sent
+    //! Outbound queue of segments that the TCPSender wants sent
     std::queue<TCPSegment> _segments_out{};
 
-    //! retransmission timer for the connection
+    //! Retransmission timer configuration
     unsigned int _initial_retransmission_timeout;
+    unsigned int _current_rto;
 
-    //! outgoing stream of bytes that have not yet been sent
+    //! Outgoing stream of bytes
     ByteStream _stream;
 
-    //! the (absolute) sequence number for the next byte to be sent
+    //! The (absolute) sequence number for the next byte to be sent
     uint64_t _next_seqno{0};
 
-    bool _syn_sent = false;
-    bool _fin_sent = false;
+    //! Connection state flags
+    enum class State { CLOSED, SYN_SENT, SYN_ACKED, FIN_SENT } _state{State::CLOSED};
+
+    //! Sender window tracking
     uint64_t _bytes_in_flight = 0;
-    uint16_t _receiver_window_size = 0;
-    uint16_t _receiver_free_space = 0;
-    uint16_t _consecutive_retransmissions = 0;
-    unsigned int _rto = 0;
-    unsigned int _time_elapsed = 0;
-    bool _timer_running = false;
+    uint16_t _window_size{1};  // Start with 1 to allow sending SYN
     std::queue<TCPSegment> _segments_outstanding{};
+
+    //! Retransmission tracking
+    uint16_t _consecutive_retransmissions{0};
+    unsigned int _time_elapsed{0};
+    bool _timer_running{false};
+
     // Lab4 modify:
     // bool _fill_window_called_by_ack_received{false};
 
-    bool _ack_valid(uint64_t abs_ackno);
-    void _send_segment(TCPSegment &seg);
+    //! Helper methods
+    bool is_ack_valid(uint64_t abs_ackno) const;
+    void send_segment(TCPSegment &seg);
+    void start_timer();
+    void stop_timer();
+    void reset_timer();
 
   public:
     //! Initialize a TCPSender
@@ -83,10 +91,10 @@ class TCPSender {
     //! \brief How many sequence numbers are occupied by segments sent but not yet acknowledged?
     //! \note count is in "sequence space," i.e. SYN and FIN each count for one byte
     //! (see TCPSegment::length_in_sequence_space())
-    size_t bytes_in_flight() const;
+    size_t bytes_in_flight() const { return _bytes_in_flight; };
 
     //! \brief Number of consecutive retransmissions that have occurred in a row
-    unsigned int consecutive_retransmissions() const;
+    unsigned int consecutive_retransmissions() const { return _consecutive_retransmissions; };
 
     //! \brief TCPSegments that the TCPSender has enqueued for transmission.
     //! \note These must be dequeued and sent by the TCPConnection,
