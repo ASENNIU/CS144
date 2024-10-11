@@ -91,7 +91,7 @@ class TCPConnection {
     //! \brief Is the connection still alive in any way?
     //! \returns `true` if either stream is still running or if the TCPConnection is lingering
     //! after both streams have finished (e.g. to ACK retransmissions from the peer)
-    bool active() const;
+    bool active() const { return _active; };
     //!@}
 
     //! Construct a new connection from a configuration
